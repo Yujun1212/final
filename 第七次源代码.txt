@@ -1,0 +1,27 @@
+%源代码
+i=imread('test2.png');
+i1=i(:,:,1);
+BW1=edge(i1,'sobel');%sobel
+BW2=edge(i1,'roberts');%roberts
+BW3=edge(i1,'prewitt');%prewitt
+[H,T,R] = hough(BW1);%'RhoResolution',0.7,'Theta',-45:0.5:45
+P=houghpeaks(H,10);
+lines=houghlines(BW1,T,R,P);%提取线段
+
+figure(1);
+subplot(221)
+imshow(i1);title('原图像');
+subplot(222)
+imshow(BW1);title('soble边缘检测')
+subplot(223)
+imshow(BW2);title('roberts边缘检测')
+subplot(224)
+imshow(BW3);title('perwitt边缘检测')
+figure(2);
+imshow(BW1),hold on;
+for k = 1:length(lines)
+xy = [lines(k).point1; lines(k).point2];
+ plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');%画出线段
+plot(xy(1,1),xy(1,2),'x','LineWidth',2,'Color','yellow');%起点
+plot(xy(2,1),xy(2,2),'x','LineWidth',2,'Color','red');%终点
+end
